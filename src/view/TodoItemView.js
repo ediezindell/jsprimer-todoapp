@@ -6,9 +6,13 @@ export class TodoItemView {
 			todoItem.completed ? "checked" : ""
 		}>${todoItem.title}<button class="delete">x</button></li>`;
 		const inputCheckboxElement = todoItemElement.querySelector(".checkbox");
-		inputCheckboxElement.addEventListener("change", onUpdateTodo);
+		inputCheckboxElement.addEventListener("change", () =>
+			onUpdateTodo({ id: todoItem.id, completed: todoItem.completed }),
+		);
 		const deleteButtonElement = todoItemElement.querySelector(".delete");
-		deleteButtonElement.addEventListener("click", onDeleteTodo);
+		deleteButtonElement.addEventListener("click", () =>
+			onDeleteTodo({ id: todoItem.id }),
+		);
 		return todoItemElement;
 	}
 }
