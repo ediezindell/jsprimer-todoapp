@@ -1,10 +1,14 @@
 import { TodoListModel } from "./model/TodoListModel.js";
 import { TodoItemModel } from "./model/TodoItemModel.js";
+import { TodoItemView } from "./view/TodoItemView.js";
 import { element, render } from "./view/html-util.js";
+
 console.log("App.js loaded");
+
 export class App {
 	#todoListModel = new TodoListModel();
 	mount() {
+		const todoItemView = new TodoItemView();
 		const formElement = document.getElementById("js-form");
 		const inputElement = document.getElementById("js-form-input");
 		const containerElement = document.getElementById("js-todo-list");
@@ -13,19 +17,18 @@ export class App {
 			const todoListElement = element`<ul><ul>`;
 			const todoItems = this.#todoListModel.getTodoItems();
 			todoItems.forEach((item) => {
-				const todoItemElement = element`<li><input type="checkbox" class="checkbox" ${
-					item.completed ? "checked" : ""
-				}>${item.title}<button class="delete">x</button></li>`;
-				const inputCheckboxElement = todoItemElement.querySelector(".checkbox");
-				inputCheckboxElement.addEventListener("change", () => {
+				const onUpdateTodo = () => {
 					this.#todoListModel.updateTodo({
 						id: item.id,
 						completed: !item.completed,
 					});
-				});
-				const deleteButtonElement = todoItemElement.querySelector(".delete");
-				deleteButtonElement.addEventListener("click", () => {
+				};
+				const onDeleteTodo = () => {
 					this.#todoListModel.deleteTodo({ id: item.id });
+				};
+				const todoItemElement = todoItemView.createElement(item, {
+					onUpdateTodo,
+					onDeleteTodo,
 				});
 				todoListElement.appendChild(todoItemElement);
 			});
